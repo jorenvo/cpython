@@ -434,6 +434,21 @@ class OrderedDictTests:
         od.move_to_end('c')
         self.assertEqual(list(od), list('bac'))
 
+    def test_nextkey(self):
+        OrderedDict = self.OrderedDict
+        od = OrderedDict()
+        with self.assertRaises(KeyError):
+            od.nextkey('x')
+
+        od['spam'] = 1
+        od['ham'] = 2
+        od['bam'] = 3
+        self.assertEqual(od.nextkey('spam'), 'ham')
+        self.assertEqual(od.nextkey('ham'), 'bam')
+        self.assertIsNone(od.nextkey('bam'))
+        with self.assertRaises(KeyError):
+            od.nextkey('x')
+
     def test_sizeof(self):
         OrderedDict = self.OrderedDict
         # Wimpy test: Just verify the reported size is larger than a regular dict

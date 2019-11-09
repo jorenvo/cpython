@@ -1132,6 +1132,37 @@ OrderedDict_popitem_impl(PyODictObject *self, int last)
     return item;
 }
 
+/* nextkey() */
+
+/*[clinic input]
+OrderedDict.nextkey
+
+    key: object
+
+Gets the key after the given key from the dictionary.
+[clinic start generated code]*/
+
+static PyObject *
+OrderedDict_nextkey_impl(PyODictObject *self, PyObject *key)
+/*[clinic end generated code: output=72500e3a678c02de input=79c6181eef6d681b]*/
+{
+    _ODictNode *node = _odict_find_node((PyODictObject *)self, key);
+    if (node == NULL) {
+        if (!PyErr_Occurred())
+            PyErr_SetObject(PyExc_KeyError, key);
+        return NULL;
+    }
+
+    _ODictNode *next = _odictnode_NEXT(node);
+    if (next == NULL) {
+        Py_RETURN_NONE;
+    }
+
+    PyObject *next_key = _odictnode_KEY(next);
+    Py_INCREF(next_key);
+    return next_key;
+}
+
 /* keys() */
 
 /* MutableMapping.keys() does not have a docstring. */
@@ -1331,6 +1362,7 @@ static PyMethodDef odict_methods[] = {
     {"__reversed__",    (PyCFunction)odict_reversed,    METH_NOARGS,
      odict_reversed__doc__},
     ORDEREDDICT_MOVE_TO_END_METHODDEF
+    ORDEREDDICT_NEXTKEY_METHODDEF
 
     {NULL,              NULL}   /* sentinel */
 };

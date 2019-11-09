@@ -191,6 +191,12 @@ class OrderedDict(dict):
             first.prev = soft_link
             root.next = link
 
+    def nextkey(self, key):
+        link_next = self.__map[key].next
+        if link_next is self.__root:
+            return None
+        return link_next.key
+
     def __sizeof__(self):
         sizeof = _sys.getsizeof
         n = len(self) + 1                       # number of links including root

@@ -125,6 +125,38 @@ exit:
     return return_value;
 }
 
+PyDoc_STRVAR(OrderedDict_nextkey__doc__,
+"nextkey($self, /, key)\n"
+"--\n"
+"\n"
+"Gets the key after key from the dictionary.");
+
+#define ORDEREDDICT_NEXTKEY_METHODDEF    \
+    {"nextkey", (PyCFunction)(void(*)(void))OrderedDict_nextkey, METH_FASTCALL|METH_KEYWORDS, OrderedDict_nextkey__doc__},
+
+static PyObject *
+OrderedDict_nextkey_impl(PyODictObject *self, PyObject *key);
+
+static PyObject *
+OrderedDict_nextkey(PyODictObject *self, PyObject *const *args, Py_ssize_t nargs, PyObject *kwnames)
+{
+    PyObject *return_value = NULL;
+    static const char * const _keywords[] = {"key", NULL};
+    static _PyArg_Parser _parser = {NULL, _keywords, "nextkey", 0};
+    PyObject *argsbuf[1];
+    PyObject *key;
+
+    args = _PyArg_UnpackKeywords(args, nargs, NULL, kwnames, &_parser, 1, 1, 0, argsbuf);
+    if (!args) {
+        goto exit;
+    }
+    key = args[0];
+    return_value = OrderedDict_nextkey_impl(self, key);
+
+exit:
+    return return_value;
+}
+
 PyDoc_STRVAR(OrderedDict_move_to_end__doc__,
 "move_to_end($self, /, key, last=True)\n"
 "--\n"
@@ -168,4 +200,4 @@ skip_optional_pos:
 exit:
     return return_value;
 }
-/*[clinic end generated code: output=8eb1296df9142908 input=a9049054013a1b77]*/
+/*[clinic end generated code: output=ba80aa6ddc85ddf6 input=a9049054013a1b77]*/
