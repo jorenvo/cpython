@@ -1137,6 +1137,7 @@ OrderedDict_popitem_impl(PyODictObject *self, int last)
 static PyObject *
 _odict_adjacentkey(PyObject *od, PyObject *key, int nextkey)
 {
+    _ODictNode *adjacent;
     _ODictNode *node = _odict_find_node((PyODictObject *)od, key);
     if (node == NULL) {
         if (!PyErr_Occurred())
@@ -1144,14 +1145,19 @@ _odict_adjacentkey(PyObject *od, PyObject *key, int nextkey)
         return NULL;
     }
 
-    _ODictNode *next = _odictnode_NEXT(node);
-    if (next == NULL) {
+    if (nextkey) {
+        adjacent = _odictnode_NEXT(node);
+    } else {
+        adjacent = _odictnode_PREV(node);
+    }
+
+    if (adjacent == NULL) {
         Py_RETURN_NONE;
     }
 
-    PyObject *next_key = _odictnode_KEY(next);
-    Py_INCREF(next_key);
-    return next_key;
+    PyObject *adjacent_key = _odictnode_KEY(adjacent);
+    Py_INCREF(adjacent_key);
+    return adjacent_key;
 }
 
 /* nextkey() */
@@ -1166,9 +1172,26 @@ Gets the key after the given key from the dictionary.
 
 static PyObject *
 OrderedDict_nextkey_impl(PyODictObject *self, PyObject *key)
-/*[clinic end generated code: output=72500e3a678c02de input=79c6181eef6d681b]*/
+/*[clinic end generated code: output=72500e3a678c02de input=4197c4e292c8e4f3]*/
 {
     return _odict_adjacentkey((PyObject *)self, key, 1);	
+}
+
+/* prevkey() */
+
+/*[clinic input]
+OrderedDict.prevkey
+
+    key: object
+
+Gets the key before the given key from the dictionary.
+[clinic start generated code]*/
+
+static PyObject *
+OrderedDict_prevkey_impl(PyODictObject *self, PyObject *key)
+/*[clinic end generated code: output=9bc549876ecef60a input=b16cbf6ec01cadf4]*/
+{
+    return _odict_adjacentkey((PyObject *)self, key, 0);
 }
 
 /* keys() */
@@ -1371,6 +1394,7 @@ static PyMethodDef odict_methods[] = {
      odict_reversed__doc__},
     ORDEREDDICT_MOVE_TO_END_METHODDEF
     ORDEREDDICT_NEXTKEY_METHODDEF
+    ORDEREDDICT_PREVKEY_METHODDEF
 
     {NULL,              NULL}   /* sentinel */
 };

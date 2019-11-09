@@ -446,8 +446,19 @@ class OrderedDictTests:
         self.assertEqual(od.nextkey('spam'), 'ham')
         self.assertEqual(od.nextkey('ham'), 'bam')
         self.assertIsNone(od.nextkey('bam'))
+
+    def test_prevkey(self):
+        OrderedDict = self.OrderedDict
+        od = OrderedDict()
         with self.assertRaises(KeyError):
-            od.nextkey('x')
+            od.prevkey('x')
+
+        od['spam'] = 1
+        od['ham'] = 2
+        od['bam'] = 3
+        self.assertIsNone(od.prevkey('spam'))
+        self.assertEqual(od.prevkey('ham'), 'spam')
+        self.assertEqual(od.prevkey('bam'), 'ham')
 
     def test_sizeof(self):
         OrderedDict = self.OrderedDict

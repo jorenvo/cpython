@@ -129,7 +129,7 @@ PyDoc_STRVAR(OrderedDict_nextkey__doc__,
 "nextkey($self, /, key)\n"
 "--\n"
 "\n"
-"Gets the key after key from the dictionary.");
+"Gets the key after the given key from the dictionary.");
 
 #define ORDEREDDICT_NEXTKEY_METHODDEF    \
     {"nextkey", (PyCFunction)(void(*)(void))OrderedDict_nextkey, METH_FASTCALL|METH_KEYWORDS, OrderedDict_nextkey__doc__},
@@ -152,6 +152,38 @@ OrderedDict_nextkey(PyODictObject *self, PyObject *const *args, Py_ssize_t nargs
     }
     key = args[0];
     return_value = OrderedDict_nextkey_impl(self, key);
+
+exit:
+    return return_value;
+}
+
+PyDoc_STRVAR(OrderedDict_prevkey__doc__,
+"prevkey($self, /, key)\n"
+"--\n"
+"\n"
+"Gets the key before the given key from the dictionary.");
+
+#define ORDEREDDICT_PREVKEY_METHODDEF    \
+    {"prevkey", (PyCFunction)(void(*)(void))OrderedDict_prevkey, METH_FASTCALL|METH_KEYWORDS, OrderedDict_prevkey__doc__},
+
+static PyObject *
+OrderedDict_prevkey_impl(PyODictObject *self, PyObject *key);
+
+static PyObject *
+OrderedDict_prevkey(PyODictObject *self, PyObject *const *args, Py_ssize_t nargs, PyObject *kwnames)
+{
+    PyObject *return_value = NULL;
+    static const char * const _keywords[] = {"key", NULL};
+    static _PyArg_Parser _parser = {NULL, _keywords, "prevkey", 0};
+    PyObject *argsbuf[1];
+    PyObject *key;
+
+    args = _PyArg_UnpackKeywords(args, nargs, NULL, kwnames, &_parser, 1, 1, 0, argsbuf);
+    if (!args) {
+        goto exit;
+    }
+    key = args[0];
+    return_value = OrderedDict_prevkey_impl(self, key);
 
 exit:
     return return_value;
@@ -200,4 +232,4 @@ skip_optional_pos:
 exit:
     return return_value;
 }
-/*[clinic end generated code: output=ba80aa6ddc85ddf6 input=a9049054013a1b77]*/
+/*[clinic end generated code: output=eaff653a6875091a input=a9049054013a1b77]*/
